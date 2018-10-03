@@ -1,30 +1,39 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import coinMarketCapApiKey from './Components/keys';
+import axios from 'axios';
+import CoinLookUp from './Components/CoinLookUp/CoinLookUp';
 
 class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      coins: null
+    }
+
+    this.callAPI = this.callAPI.bind(this); 
+  }
+
+  componentDidMount() {
+    this.callAPI();
+  }
+
+  callAPI() {
+    axios.get('https://api.coinranking.com/v1/public/coins')
+    .then(
+      (response) => {
+        this.setState({
+          coins: response.data.data.coins
+        })
+    })
+  }    
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1>API key works!</h1>
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <CoinLookUp
+          coins={this.state.coins}
+        />
       </div>
     );
   }
 }
-
 export default App;
